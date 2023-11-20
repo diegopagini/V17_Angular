@@ -19,7 +19,7 @@ export default class DashboardComponent {}
 
 ## Control Flow
 
-### for
+### For
 
 ```html
 @for (item of menuItems; track $index) {
@@ -30,4 +30,21 @@ export default class DashboardComponent {}
   </div>
 </a>
 }
+```
+
+### If
+
+```html
+<section class="grid grid-cols-1 md:grid-cols-2 gap-3">
+  <div class="bg-white rounded shadow p-10">
+    <h2 class="text-2xl font-bold mb-5">if: {{ showContent() }}</h2>
+    <button (click)="toggleShowContent()" class="p-2 bg-blue-500 rounded text-white">Click Me!</button>
+
+    @if (showContent()) {
+    <p>Hello World!</p>
+    } @else {
+    <p>*****</p>
+    }
+  </div>
+</section>
 ```
