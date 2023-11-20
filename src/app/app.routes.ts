@@ -42,10 +42,20 @@ export const routes: Route[] = [
         loadComponent: () => import('./dashboard/pages/users/users.component'),
       },
       {
-        path: 'view-transitions',
+        path: 'view-transitions-1',
         title: 'View Transitions',
         loadComponent: () =>
-          import('./dashboard/pages/view-transition/view-transition.component'),
+          import(
+            './dashboard/pages/view-transition/view-transition.component1'
+          ),
+      },
+      {
+        path: 'view-transitions-2',
+        title: 'View Transitions',
+        loadComponent: () =>
+          import(
+            './dashboard/pages/view-transition/view-transition.component2'
+          ),
       },
       {
         path: '',

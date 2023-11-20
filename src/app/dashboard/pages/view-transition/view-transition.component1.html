@@ -1,0 +1,14 @@
+<app-title [title]="'View Transition 1'" />
+
+<section class="flex justify-start">
+  <img
+    alt="Picsum"
+    height="300"
+    srcset="https://picsum.photos/id/237/200/300"
+    width="200"
+    style="view-transition-name: hero1"
+  />
+  <!-- style="view-transition-name: hero1" is the unique identifier to use view transition api -->
+  <div class="bg-blue-500 w-56 h-56" style="view-transition-name: hero2"></div>
+  <!-- style="view-transition-name: hero2" is the unique identifier to use view transition api -->
+</section>

@@ -391,3 +391,69 @@ export default class DeferOptionsComponent {}
   }
 </section>
 ```
+
+## View Transition
+
+### app.config.ts
+
+```typescript
+import { ApplicationConfig } from "@angular/core";
+import { provideRouter, withViewTransitions } from "@angular/router";
+
+import { routes } from "./app.routes";
+
+export const appConfig: ApplicationConfig = {
+  providers: [provideRouter(routes, withViewTransitions())],
+};
+```
+
+### ViewTransitionComponent1
+
+```typescript
+import { CommonModule } from "@angular/common";
+import { Component } from "@angular/core";
+import { TitleComponent } from "@shared/title/title.component";
+
+@Component({
+  standalone: true,
+  imports: [CommonModule, TitleComponent],
+  templateUrl: "./view-transition.component1.html",
+})
+export default class ViewTransitionComponent {}
+```
+
+```html
+<app-title [title]="'View Transition 1'" />
+
+<section class="flex justify-start">
+  <img alt="Picsum" height="300" srcset="https://picsum.photos/id/237/200/300" width="200" style="view-transition-name: hero1" />
+  <!-- style="view-transition-name: hero1" is the unique identifier to use view transition api -->
+  <div class="bg-blue-500 w-56 h-56" style="view-transition-name: hero2"></div>
+  <!-- style="view-transition-name: hero2" is the unique identifier to use view transition api -->
+</section>
+```
+
+### ViewTransitionComponent2
+
+```typescript
+import { CommonModule } from "@angular/common";
+import { Component } from "@angular/core";
+import { TitleComponent } from "@shared/title/title.component";
+
+@Component({
+  standalone: true,
+  imports: [CommonModule, TitleComponent],
+  templateUrl: "./view-transition.component2.html",
+})
+export default class ViewTransitionComponent {}
+```
+
+```html
+<app-title [title]="'View Transition 2'" />
+
+<section class="flex justify-end">
+  <img alt="Picsum" height="300" srcset="https://picsum.photos/id/237/200/300" width="200" style="view-transition-name: hero1" />
+
+  <div class="fixed bottom-16 right-10 bg-blue-800 w-32 h-32 rounded" style="view-transition-name: hero2"></div>
+</section>
+```
