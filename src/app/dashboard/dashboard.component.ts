@@ -8,4 +8,4 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DashboardComponent {}
+export default class DashboardComponent {}
