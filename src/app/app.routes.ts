@@ -41,6 +41,11 @@ export const routes: Route[] = [
         title: 'Users',
         loadComponent: () => import('./dashboard/pages/users/users.component'),
       },
+      {
+        path: '',
+        redirectTo: 'control-flow',
+        pathMatch: 'full',
+      },
     ],
   },
   {
