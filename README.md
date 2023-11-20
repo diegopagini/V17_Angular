@@ -48,3 +48,58 @@ export default class DashboardComponent {}
   </div>
 </section>
 ```
+
+### Switch
+
+```html
+<div class="bg-white rounded shadow p-10">
+  <h2 class="text-2xl font-bold mb-5">Switch: {{ grade() }}</h2>
+
+  @switch (grade()) {
+  <!-- Cases -->
+  @case ('A') {
+  <p>90+</p>
+  } @case ('B') {
+  <p>70+</p>
+  } @case ('F') {
+  <p>Reprobate</p>
+  } @default {
+  <p>default</p>
+  }
+  <!-- End cases -->
+  }
+</div>
+```
+
+### For empty and options
+
+```html
+<div class="bg-white rounded shadow p-10">
+  <h2 class="text-2xl font-bold mb-5">For</h2>
+  <ul>
+    @for (framework of frameworks(); track framework; let i = $index, first = $first, last = $last, even = $even, odd = $odd, count = $count) {
+    <li
+      [ngClass]="
+        {
+          'bg-red-100': even && !first && !last,
+          'bg-purple-100': odd && !first && !last,
+          'bg-blue-100': first || last,          
+        }"
+    >
+      {{ i + 1 }}/{{ count }} - {{ framework }}
+    </li>
+    }
+  </ul>
+</div>
+
+<div class="bg-white rounded shadow p-10">
+  <h2 class="text-2xl font-bold mb-5">For empty</h2>
+  <ul>
+    @for (framework of frameworks2(); track $index) {
+    <li>{{ framework }}</li>
+    } @empty {
+    <li>There is no framework</li>
+    }
+  </ul>
+</div>
+```
