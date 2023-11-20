@@ -249,3 +249,145 @@ export default class DeferViewsComponent {}
   }
 </section>
 ```
+
+## Defer Options
+
+### HeavyLoadersFastComponent
+
+```typescript
+import { CommonModule } from "@angular/common";
+import { Component, Input } from "@angular/core";
+
+@Component({
+  selector: "app-heavy-loaders-fast",
+  standalone: true,
+  imports: [CommonModule],
+  template: `<section [ngClass]="['w-full', cssClass]">
+    <ng-content></ng-content>
+  </section>`,
+})
+export class HeavyLoadersFastComponent {
+  @Input({ required: true }) cssClass: string;
+
+  constructor() {
+    console.log("HeavyLoadersFastComponent created");
+  }
+}
+```
+
+### DeferOptionsComponent
+
+```typescript
+import { CommonModule } from "@angular/common";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { HeavyLoadersFastComponent } from "@shared/heavy-loaders/heavy-loaders-fast.component";
+import { TitleComponent } from "@shared/title/title.component";
+
+@Component({
+  standalone: true,
+  imports: [CommonModule, HeavyLoadersFastComponent, TitleComponent],
+  templateUrl: "./defer-options.component.html",
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export default class DeferOptionsComponent {}
+```
+
+### DeferOptionsComponent
+
+```html
+<app-title title="Defer Triggers" />
+
+<section>
+  <h1 class="text-xl">Interaction</h1>
+  <hr class="my-2" />
+  <!-- This component will be displayed upon any interaction-->
+  @defer (on interaction ) {
+  <app-heavy-loaders-fast cssClass="bg-blue-500 h-20">
+    <span>On Interaction</span>
+  </app-heavy-loaders-fast>
+  } @placeholder {
+  <div class="w-full h-20 bg-purple-100">Interact with me!</div>
+  }
+</section>
+
+<!-- ****************************** -->
+
+<section>
+  <h1 class="text-xl">Click</h1>
+  <hr class="my-2" />
+
+  <button #btnInteraction class="p-2 bg-blue-500 hover:bg-blue-700 transition-all rounded text-white my-2">Click me!</button>
+  <!-- This component will be shown only when clicking on the btnInteraction -->
+  @defer ( on interaction(btnInteraction)) {
+  <app-heavy-loaders-fast cssClass="bg-blue-500 h-20">
+    <span>On click</span>
+  </app-heavy-loaders-fast>
+  } @placeholder {
+  <div class="w-full h-20 bg-purple-100">Click the button!</div>
+  }
+</section>
+
+<!-- ****************************** -->
+
+<section>
+  <h1 class="text-xl">Hover</h1>
+  <hr class="my-2" />
+
+  <!-- This component will be shown only when hover -->
+  @defer ( on hover) {
+  <app-heavy-loaders-fast cssClass="bg-blue-500 h-20">
+    <span>On Hover</span>
+  </app-heavy-loaders-fast>
+  } @placeholder {
+  <div class="w-full h-20 bg-purple-100">On Hover</div>
+  }
+</section>
+
+<!-- ****************************** -->
+
+<section>
+  <h1 class="text-xl">Immediately</h1>
+  <hr class="my-2" />
+
+  <!-- This component will be shown immediately -->
+  @defer ( on immediate) {
+  <app-heavy-loaders-fast cssClass="bg-blue-500 h-20">
+    <span>Immediately</span>
+  </app-heavy-loaders-fast>
+  } @placeholder {
+  <div class="w-full h-20 bg-purple-100">Immediately</div>
+  }
+</section>
+
+<!-- ****************************** -->
+
+<section>
+  <h1 class="text-xl">Timer</h1>
+  <hr class="my-2" />
+
+  <!-- This component will be shown after 2 seconds -->
+  @defer ( on timer(2000)) {
+  <app-heavy-loaders-fast cssClass="bg-blue-500 h-20">
+    <span>Timer</span>
+  </app-heavy-loaders-fast>
+  } @placeholder {
+  <div class="w-full h-20 bg-green-100">2 seconds</div>
+  }
+</section>
+
+<!-- ****************************** -->
+
+<section>
+  <h1 class="text-xl">Multiple</h1>
+  <hr class="my-2" />
+
+  <!-- This component will be shown on hover or idle -->
+  @defer ( on hover; prefetch on idle) {
+  <app-heavy-loaders-fast cssClass="bg-blue-500 h-20">
+    <span>On hover, idle</span>
+  </app-heavy-loaders-fast>
+  } @placeholder {
+  <div class="w-full h-20 bg-blue-100">On hover, idle</div>
+  }
+</section>
+```
