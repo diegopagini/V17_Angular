@@ -457,3 +457,136 @@ export default class ViewTransitionComponent {}
   <div class="fixed bottom-16 right-10 bg-blue-800 w-32 h-32 rounded" style="view-transition-name: hero2"></div>
 </section>
 ```
+
+## Services with Signal
+
+### UsersService
+
+```typescript
+import { HttpClient } from "@angular/common/http";
+import { computed, inject, Injectable, signal } from "@angular/core";
+import { User, UsersResponse } from "@interfaces/req.response";
+import { delay, Observable } from "rxjs";
+
+interface State {
+  loading: boolean;
+  users: User[];
+}
+
+@Injectable({
+  providedIn: "root",
+})
+export class UsersService {
+  http = inject(HttpClient);
+
+  // #state === private. But with "#" when the transpilation is complete it will be private too in EcmaScript.
+  #state = signal<State>({
+    loading: true,
+    users: [],
+  });
+
+  users = computed(() => this.#state().users);
+  loading = computed(() => this.#state().loading);
+
+  constructor() {
+    console.log("Loading data...");
+
+    this.getUsers()
+      .pipe(delay(1500))
+      .subscribe(({ data }: UsersResponse) => {
+        this.#state.set({
+          loading: false,
+          users: data,
+        });
+      });
+  }
+
+  getUsers(): Observable<UsersResponse> {
+    return this.http.get<UsersResponse>(`https://reqres.in/api/users`);
+  }
+}
+```
+
+### UsersComponent
+
+```typescript
+import { CommonModule } from "@angular/common";
+import { Component, inject } from "@angular/core";
+import { RouterModule } from "@angular/router";
+import { UsersService } from "@services/users.service";
+import { TitleComponent } from "@shared/title/title.component";
+
+@Component({
+  standalone: true,
+  imports: [CommonModule, TitleComponent, RouterModule],
+  templateUrl: "./users.component.html",
+})
+export default class UsersComponent {
+  usersService = inject(UsersService);
+}
+```
+
+### UsersComponent
+
+```html
+<app-title title="User List" />
+
+<ul>
+  @for (user of usersService.users(); track user.id) {
+  <li class="flex items-center my-2 cursor-pointer">
+    <img [alt]="user.first_name" [srcset]="user.avatar" [style]="'view-transition-name: ' + user.id" class="rounder w-14" />
+    <a [routerLink]="['/dashboard/user', user.id]" class="mx-5 hover:underline">{{ user.first_name }} {{ user.first_name }}</a>
+  </li>
+  } @empty {
+  <li>Loading...</li>
+  }
+</ul>
+```
+
+### UserComponent
+
+```typescript
+import { CommonModule } from "@angular/common";
+import { ChangeDetectionStrategy, Component, computed, inject } from "@angular/core";
+import { toSignal } from "@angular/core/rxjs-interop";
+import { ActivatedRoute, Params } from "@angular/router";
+import { UsersService } from "@services/users.service";
+import { TitleComponent } from "@shared/title/title.component";
+import { switchMap } from "rxjs";
+
+@Component({
+  standalone: true,
+  imports: [CommonModule, TitleComponent],
+  templateUrl: "./user.component.html",
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export default class UserComponent {
+  private route = inject(ActivatedRoute);
+  private usersService = inject(UsersService);
+  user = toSignal(this.route.params.pipe(switchMap(({ id }: Params) => this.usersService.getUserById(id))));
+  fullName = computed(() => {
+    if (this.user()) return `User: ${this.user()?.first_name} ${this.user()?.last_name}`;
+
+    return "Loading user...";
+  });
+}
+```
+
+### UserComponent
+
+```html
+<app-title [title]="fullName()" />
+
+@if (user()) {
+<section>
+  <img [alt]="user()!.first_name" [srcset]="user()!.avatar" [style]="'view-transition-name:' + user()!.id" width="200" class="rounded" />
+
+  <div>
+    <h3>{{ user()?.first_name }} {{ user()?.last_name }}</h3>
+    <p>{{ user()?.email }}</p>
+  </div>
+</section>
+} @else {
+<p>Loading...</p>
+}
+```

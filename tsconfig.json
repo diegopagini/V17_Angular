@@ -22,6 +22,8 @@
     "lib": ["ES2022", "dom"],
     "strictPropertyInitialization": false,
     "paths": {
+      "@interfaces/*": ["./src/app/interfaces/*"],
+      "@services/*": ["./src/app/services/*"],
       "@shared/*": ["./src/app/shared/*"]
     }
   },
