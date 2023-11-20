@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { Route } from '@angular/router';
+import { Route, RouterModule } from '@angular/router';
 import { routes } from 'src/app/app.routes';
 
 @Component({
   selector: 'app-sidemenu',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './sidemenu.component.html',
   styles: ``,
 })

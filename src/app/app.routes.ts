@@ -38,8 +38,14 @@ export const routes: Route[] = [
       },
       {
         path: 'user-list',
-        title: 'Users',
+        title: 'User List',
         loadComponent: () => import('./dashboard/pages/users/users.component'),
+      },
+      {
+        path: 'view-transitions',
+        title: 'View Transitions',
+        loadComponent: () =>
+          import('./dashboard/pages/view-transition/view-transition.component'),
       },
       {
         path: '',
