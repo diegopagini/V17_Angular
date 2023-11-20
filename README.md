@@ -175,3 +175,77 @@ export default class ChangeDetectionComponent {
   }
 }
 ```
+
+## Defer Views
+
+### HeavyLoadersSlowComponent
+
+```typescript
+import { CommonModule } from "@angular/common";
+import { Component, Input } from "@angular/core";
+
+@Component({
+  selector: "app-heavy-loaders-slow",
+  standalone: true,
+  imports: [CommonModule],
+  template: ` <section [ngClass]="['w-full h-[600px]', cssClass]">Heavy Loader Slow</section> `,
+})
+export class HeavyLoadersSlowComponent {
+  @Input({ required: true }) cssClass: string;
+
+  constructor() {
+    const start = Date.now();
+    while (Date.now() - start < 3000) {
+      // This code will block JavaScript
+    }
+    console.log("Loaded");
+  }
+}
+```
+
+### DeferViewsComponent
+
+```typescript
+import { CommonModule } from "@angular/common";
+import { Component } from "@angular/core";
+import { HeavyLoadersFastComponent } from "@shared/heavy-loaders/heavy-loaders-fast.component";
+import { HeavyLoadersSlowComponent } from "@shared/heavy-loaders/heavy-loaders-slow.component";
+import { TitleComponent } from "@shared/title/title.component";
+
+@Component({
+  standalone: true,
+  imports: [CommonModule, HeavyLoadersSlowComponent, HeavyLoadersFastComponent, TitleComponent],
+  templateUrl: "./defer-views.component.html",
+})
+export default class DeferViewsComponent {}
+```
+
+### DeferViewsComponent
+
+```html
+<app-title [title]="'Defer Views'" />
+
+<section class="grid- grid-cols-1">
+  <!-- First component -->
+  @defer () {
+  <app-heavy-loaders-slow cssClass="bg-blue-500" />
+  } @placeholder {
+  <p class="h-[600px] w-full bg-gradient-to-r from-gray-200 to-gray-400 animate-pulse text-center">Loading...</p>
+  }
+
+  <!-- Second component -->
+  @defer (on viewport) {
+  <!-- 'on viewport' It will cause the component not to load until it is inside the view -->
+  <app-heavy-loaders-slow cssClass="bg-green-500" />
+  } @placeholder {
+  <p class="h-[600px] w-full bg-gradient-to-r from-gray-200 to-gray-400 animate-pulse text-center">Loading...</p>
+  }
+
+  <!-- Third component -->
+  @defer (on viewport) {
+  <app-heavy-loaders-slow cssClass="bg-purple-500" />
+  } @placeholder {
+  <p class="h-[600px] w-full bg-gradient-to-r from-gray-200 to-gray-400 animate-pulse text-center">Loading...</p>
+  }
+</section>
+```
